@@ -16,7 +16,7 @@ Boreal
 
 
 
-**Bo**keh **Re**active **A**udio Widget **L**ibrary
+**Bo** keh **Re** active **A** udio Widget **L** ibrary
 
 
 * Free software: MIT license
@@ -26,12 +26,13 @@ Boreal
 Features
 --------
 
+* Bokeh application for audio reactive plots 
+* Example audio widgets: time domain, spectrum, waveform envelope, circularEQ
+* Support for both real-time computation of visuals as well as pre-computation
+* Ability to use html audio for playback on local machine when notebook is hosted remotely 
 
 
-
-
-* TODO
-
+<h2> TODO <h2> 
 * Lots 
   
 
