@@ -17,7 +17,7 @@ Boreal
 
 
 
-.. image:: https://raw.githubusercontent.com/gtzan/boreal/main/images/boreal-logo.png
+.. image:: https://raw.githubusercontent.com/gtzan/boreal/tree/main/images/boreal-logo.png
 
 	      
 **Bo**\ keh **Re**\ active **A**\ udio Widget **L**\ ibrary
