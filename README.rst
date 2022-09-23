@@ -16,12 +16,19 @@ Boreal
 
 
 
-**Bo** keh **Re** active **A** udio Widget **L** ibrary
+**Bo**\ keh **Re**\ active **A**\ udio Widget **L**\ ibrary
 
 
 * Free software: MIT license
 * Documentation: https://boreal.readthedocs.io.
 
+
+Boreal is a library/framework for creating plots that
+react to audio while being able to listen to the underlying audio.
+It can be used as a stand-alone Bokeh application but
+the primary goal is for it to be used as part of the
+exploratory process while using notebooks. 
+  
 
 Features
 --------
