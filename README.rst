@@ -14,14 +14,11 @@ Boreal
         :alt: Documentation Status
 
 
-
-
 **Bo**\ keh **Re**\ active **A**\ udio Widget **L**\ ibrary
 
 
 * Free software: MIT license
 * Documentation: https://boreal.readthedocs.io.
-
 
 Boreal is a library/framework for creating plots that react to audio
 while being able to listen to the underlying audio.  It can be used as
@@ -40,8 +37,9 @@ Features
 * Bokeh application for audio reactive plots 
 * Example audio widgets: time domain, spectrum, waveform envelope, circularEQ
 * Support for both real-time computation of visuals as well as pre-computation
-* Ability to use html audio for playback on local machine when notebook is hosted remotely 
-* Straighforward to add new audio widgets and processors 
+* Ability to use html audio for playback on a local machine when notebook
+  is hosted remotely 
+* Straighforward to add new audio widgets and audio processors 
 
 TODO
 ====

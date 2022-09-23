@@ -16,13 +16,8 @@ class WaveformEnvelope:
         plotargs = dict(tools="", toolbar_location=None, outline_line_color='#595959')
 
         self.fname = fname
-        isf = sf.SoundFile(fname, 'r')
-        audio, srate = sf.read(fname)
-        max_envelope = self.process(audio, 4096, block_process=self.max_absolute)
-        time = np.linspace(0, len(audio) / srate, num=len(max_envelope))
 
-        self.signal_source_pos = ColumnDataSource(data=dict(t=[], y=[]))
-        self.signal_source_neg = ColumnDataSource(data=dict(t=[], y=[]))
+        time = [0.0, 1.0] 
         self.signal_plot = figure(plot_width=1000, plot_height=350,
                                   title="Signal",
                                   x_range=[0, time[-1] + 30],
@@ -30,6 +25,25 @@ class WaveformEnvelope:
                                   x_axis_label='Time(secs)',
                                   y_axis_label='Amplitude', **plotargs)
         self.signal_plot.background_fill_color = "#eaeaea"
+
+
+        
+        try:        
+            audio, srate = sf.read(fname, always_2d=True)
+        except RuntimeError:
+            print('Problem opening ', fname)
+            return
+
+        # convert to mono 
+        audio =  audio.sum(axis=1) / 2
+
+        max_envelope = self.process(audio, 4096, block_process=self.max_absolute)
+        time = np.linspace(0, len(audio) / srate, num=len(max_envelope))    
+
+
+
+        self.signal_source_pos = ColumnDataSource(data=dict(t=[], y=[]))
+        self.signal_source_neg = ColumnDataSource(data=dict(t=[], y=[]))
 
         self.signal_plot.vbar(x=time, bottom=-max_envelope,
                               top=max_envelope,

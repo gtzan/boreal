@@ -84,7 +84,9 @@ def update_audio_data(fname, playback_mode, audio_play,
             audio_play.wait()
 
             # read from input sound file 
-            sfdata = isf.read(blockSize).astype(np.float32)
+            sfdata = isf.read(blockSize, always_2d=True).astype(np.float32)
+            # convert to mono 
+            sfdata =  sfdata.sum(axis=1) / 2
             
             if audio_seek and audio_seek.isSet():
                 set_time = ctime
