@@ -14,6 +14,12 @@ Boreal
         :alt: Documentation Status
 
 
+
+
+
+.. image:: https://raw.githubusercontent.com/gtzan/boreal/main/images/boreal-logo.png
+
+	      
 **Bo**\ keh **Re**\ active **A**\ udio Widget **L**\ ibrary
 
 

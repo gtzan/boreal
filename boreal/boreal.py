@@ -14,11 +14,9 @@ import numpy
 import tempfile
 
 
-
-
 def get_notebook_url():
-    """ tries to find out what the notebook url is if running on a 
-        local machine. 
+    
+    """Tries to find out what the notebook url is 
     
     Returns:
         a string with the notebook url 
@@ -43,39 +41,31 @@ def get_notebook_url():
     return notebook_url[:-1]
 
 
-def spectrum(audio_input, playback_mode = 'pyaudio', notebook_url=None):
-    render(audio_input, ['spectrum'], playback_mode, notebook_url)
 
 
-def time_waveform(audio_input, playback_mode = 'pyaudio', notebook_url=None):
-    render(audio_input, ['time_waveform'], playback_mode, notebook_url)
 
 
-def waveform_envelope(audio_input, playback_mode = 'pyaudio', notebook_url=None):
-    render(audio_input, ['waveform_envelope'], playback_mode, notebook_url)
-
-    
-def circulareq(audio_input, playback_mode = 'pyaudio', notebook_url=None):
-    render(audio_input, ['circulareq'], playback_mode, notebook_url)    
 
 def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
-    """ render audio widget visualizations for an audio file 
+    """ Render reactive audio widget visualizations for an audio file 
 
     Args:
-        audio_fname (str): the audio file to be rendered (the format needs to be supported by PySoundfile
-        widgets: a list of strings with widget names
+        audio_fname (str or ndarray): the audio to be rendered (the format needs to be supported by PySoundfile if it is a filename)
+        widgets: a list of strings with widget identifiers 
         playback_mode (str): pyaudio or html
         notebook_url (str)
     """
     audio_fname = audio_input
-    if type(audio_input) is tuple:
+    if type(audio_input) is tuple:     # audio data input 
         audio, samplerate = audio_input
         temp_file_name = tempfile.NamedTemporaryFile(dir='/tmp',
                                               suffix='.wav',
                                               delete=False)
+        # write a temporary file for the audio data 
         sf.write(temp_file_name, audio, samplerate)        
         audio_fname = temp_file_name.name 
 
+    # set up the command line arguments passed to the application 
     argv = [audio_fname]
     argv = argv + [playback_mode] + widgets
     
@@ -90,3 +80,29 @@ def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
     output_notebook()
     show(app, notebook_url=notebook_url)
 
+
+# short-hand calls for specific widgets 
+    
+def spectrum(audio_input, playback_mode = 'pyaudio', notebook_url=None):
+    """ Spectrum audio widget
+    """
+    render(audio_input, ['spectrum'], playback_mode, notebook_url)
+
+
+def time_waveform(audio_input, playback_mode = 'pyaudio', notebook_url=None):
+    """ Time domain waveform 
+    """
+    render(audio_input, ['time_waveform'], playback_mode, notebook_url)
+
+    
+def waveform_envelope(audio_input, playback_mode = 'pyaudio', notebook_url=None):
+    """ Waveform envelope 
+    """
+    render(audio_input, ['waveform_envelope'], playback_mode, notebook_url)
+
+def circulareq(audio_input, playback_mode = 'pyaudio', notebook_url=None):
+
+    """ Circular equalizer 
+    """
+    
+    render(audio_input, ['circulareq'], playback_mode, notebook_url)

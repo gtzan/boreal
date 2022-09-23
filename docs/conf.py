@@ -160,3 +160,6 @@ texinfo_documents = [
 
 
 
+autodoc_member_order = 'bysource'
+html_theme = 'sphinx_rtd_theme'
+
