@@ -27,8 +27,9 @@ Boreal is a library/framework for creating plots that
 react to audio while being able to listen to the underlying audio.
 It can be used as a stand-alone Bokeh application but
 the primary goal is for it to be used as part of the
-exploratory process while using notebooks. 
+exploratory coding process when using notebooks. 
   
+
 
 Features
 --------
@@ -39,8 +40,15 @@ Features
 * Ability to use html audio for playback on local machine when notebook is hosted remotely 
 
 
-<h2> TODO <h2> 
-* Lots 
+TODO
+====
+
+Boreal is under development and there is a lot of additinal work planned.
+Some examples include:
+
+*  More audio widgets
+*  Better documentation
+*  Support for multi-channel audio 
   
 
 Credits
