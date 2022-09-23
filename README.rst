@@ -16,7 +16,7 @@ Boreal
 
 
 
-Bokeh Reactive Audio Library
+**Bo**keh **Re**active **A**udio Widget **L**ibrary
 
 
 * Free software: MIT license
@@ -26,7 +26,14 @@ Bokeh Reactive Audio Library
 Features
 --------
 
+
+
+
+
 * TODO
+
+* Lots 
+  
 
 Credits
 -------
