@@ -1,5 +1,4 @@
 import argparse
-
 from os.path import dirname, join
 from threading import Thread, Event
 
@@ -84,8 +83,6 @@ def pause_handler():
 def close_handler():
     curdoc().remove_periodic_callback(callback_id_)
     
-    
-    
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').pause();"
         ipd.display(ipd.Javascript(s1))
@@ -99,8 +96,15 @@ def close_handler():
     audio_play.set()
 
 
-
+def waveform_click_detected(event):
+    if args.playback_mode == "html":
+        s1 = "document.getElementById('myaudio').currentTime = " + str(event.x) + ";"
+        ipd.display(ipd.Javascript(s1))
     
+    audio.set_current_time(event.x)
+    audio_seek.set()        
+    
+  
 
 def start_audio_thread(audio_file_name):
     audio_thread_started_ = True
@@ -110,22 +114,9 @@ def start_audio_thread(audio_file_name):
                      args.playback_mode, audio_play, audio_close, audio_seek))
     audioThread_.setDaemon(True)
     audioThread_.start()
-
-
-
-    
-
-def waveform_click_detected(event):
-    if args.playback_mode == "html":
-        s1 = "document.getElementById('myaudio').currentTime = " + str(event.x) + ";"
-        ipd.display(ipd.Javascript(s1))
-    
-    audio.set_current_time(event.x)
-    audio_seek.set()        
-
+   
 
 audio_playing_ = False
-
 parser = argparse.ArgumentParser()
 parser.add_argument("audio_file_name",
                     type=str,
@@ -195,11 +186,10 @@ curdoc().add_root(gridplot(control_grid))
 
 # make a column of desired widgets
 plots = [audio_widgets_[x].get_plot() for x in args.widgets]
-
 plots[0].on_event(Tap, waveform_click_detected)
+
 plot_column = column(plots)
 curdoc().add_root(plot_column)
-
 curdoc().add_root(file_input) 
 
         

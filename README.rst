@@ -39,6 +39,12 @@ information from the underlying audio signal. Playback controls can be
 used to play, pause, and seek the underlying audio and associated
 visuals.
 
+Get started
+-----------
+Try the following notebook:
+
+https://github.com/gtzan/boreal/blob/main/boreal/audio_widgets_notebook.ipynb
+
 Features
 --------
 

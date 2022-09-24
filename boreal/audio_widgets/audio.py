@@ -26,7 +26,7 @@ ctime_ = 0.0
 def update_audio_data(fname, playback_mode, audio_play,
                       audio_close, audio_seek):
 
-""" Thread that reads and processes the audio data using audio processors 
+    """ Thread that reads and processes the audio data using audio processors 
 
     Args:
         fname (str) : the file from which the audio is read 

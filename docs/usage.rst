@@ -2,6 +2,12 @@
 Usage
 =====
 
-To use Boreal in a project::
+The primary use of Boreal is in the context of Python/Jupyter notebooks.
+An example notebook is provided.
 
-    import boreal
+https://github.com/gtzan/boreal/blob/main/boreal/audio_widgets_notebook.ipynb
+
+
+
+
+ 
