@@ -7,8 +7,6 @@ import soundfile as sf
 from scipy.integrate import simps
 from audio_processors import Spectrum, SpectrumBins 
 
-
-
 # These are the values extracted on every block
 # of audio that is being processed 
 data = {'time': 0.0,
@@ -22,11 +20,24 @@ audio_info = {'duration': None,
               'blockSize': None}
 
 
-ctime = 0.0 
+ctime_ = 0.0 
     
 
 def update_audio_data(fname, playback_mode, audio_play,
                       audio_close, audio_seek):
+
+""" Thread that reads and processes the audio data using audio processors 
+
+    Args:
+        fname (str) : the file from which the audio is read 
+        playback_mode (str): pyaudio or html  
+        playback_mode (str): pyaudio or html
+        audio_play (Event): event for starting/pausing playback
+        audio_close(Event): event for stopping the audio thread
+        audio_seek(Event): event for audio seeking 
+    """
+ 
+    
     k = 0
     pyaudio_available = False
 
@@ -42,6 +53,7 @@ def update_audio_data(fname, playback_mode, audio_play,
         audio_info['samplerate'] = sf.info(fname).samplerate
         audio_info['blockSize'] = blockSize
         block_duration = float(blockSize) / audio_info['samplerate']
+        
         # allocate arrays 
         signal = np.zeros(blockSize)
         html_data = signal.astype(np.float32)
@@ -87,9 +99,10 @@ def update_audio_data(fname, playback_mode, audio_play,
             sfdata = isf.read(blockSize, always_2d=True).astype(np.float32)
             # convert to mono 
             sfdata =  sfdata.sum(axis=1) / 2
-            
+
+            # seek if needed 
             if audio_seek and audio_seek.isSet():
-                set_time = ctime
+                set_time = ctime_
                 set_frame = int(set_time*audio_info['samplerate'])
                 isf.seek(set_frame)
                 current_time = set_time
@@ -105,7 +118,12 @@ def update_audio_data(fname, playback_mode, audio_play,
                 print('playback_mode', playback_mode)
                 print("Unsupported playback_mode")
 
-
+            # apply the different processors
+            # notice that the spectrum_bins_processor
+            # needs to come after the spectrum processor
+            # as it requires the spectrum to be present
+            # in data. Essentially each processor adds
+            # new information to the data dictionary 
             spectrum_processor.process(data)
             spectrum_bins_processor.process(data)
 
@@ -116,7 +134,6 @@ def update_audio_data(fname, playback_mode, audio_play,
             data['time'] = current_time                
             data['signal'] = sfdata
 
-            
             # sleep for approximately the right number
             # of time for processing a block
             # in order for the html/javascript playback
@@ -128,13 +145,15 @@ def update_audio_data(fname, playback_mode, audio_play,
                 else:
                     sleep(t1 - t0)
 
+            # deal with end of file with looping to the start 
             k = k + 1
             if k >= len_blocks:
                 print("End of file")
                 set_current_time(0.0)
                 k = 0
-                isf.seek(0)                
+                isf.seek(0)
 
+            # deal with closing/terminating the audio thread 
             if audio_close.isSet():
                 print("Terminating audio analysis/playback")
                 set_current_time(0.0)
@@ -147,9 +166,16 @@ def update_audio_data(fname, playback_mode, audio_play,
 
         
 def get_current_time():
+    """ Return the current time in seconds  
+    """
     return data['time']
 
 def set_current_time(t):
+    """ Set the current time
+    Args:
+       t (float): the time in seconds 
+    """
+    
     data['time'] = t
-    global ctime 
-    ctime =  t
+    global ctime_ 
+    ctime_ =  t
