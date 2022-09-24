@@ -41,7 +41,7 @@ visuals.
 
 Get started
 -----------
-Try the following notebook:
+To see how Boreal works try the following notebook (also part of the package):
 
 https://github.com/gtzan/boreal/blob/main/boreal/audio_widgets_notebook.ipynb
 

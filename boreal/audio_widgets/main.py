@@ -67,8 +67,12 @@ def file_input_handler(attr, old, new):
     
     
 def play_handler():
-    print('Play handler')
+    """
+    Gets called when the play button is pressed
+    and starts the audio playback
+    """
 
+    
     global callback_id_
     global audio_playing_
     global audio_thread_started_
@@ -91,6 +95,9 @@ def play_handler():
     
 
 def pause_handler():
+    """
+    Pause the audio playback 
+    """
     global audio_playing_
     audio_playing_ = False 
     if args.playback_mode == "html":
@@ -99,6 +106,9 @@ def pause_handler():
     audio_play.clear()
 
 def close_handler():
+    """
+    Stop the audio thread and the visualization callback
+    """
     curdoc().remove_periodic_callback(callback_id_)
     
     if args.playback_mode == "html":
@@ -115,6 +125,14 @@ def close_handler():
 
 
 def waveform_click_detected(event):
+    """
+    Seek a particular audio location based on event 
+
+    Args:
+    event: contains the x,y coordinates of the mouse click in data
+    coordinates
+    
+    """
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').currentTime = " + str(event.x) + ";"
         ipd.display(ipd.Javascript(s1))
@@ -124,11 +142,16 @@ def waveform_click_detected(event):
     
   
 
-def start_audio_thread(audio_file_name_):
+def start_audio_thread(audio_file_name):
+    """
+    Start the audio thread
+    Args:
+    audio_file_name (str): the audio file from which to read the samples 
+    """
     audio_thread_started_ = True
     global audioThread_ 
     audioThread_ = Thread(target=audio.update_audio_data,
-                          args=(audio_file_name_,
+                          args=(audio_file_name,
                      args.playback_mode, audio_play, audio_close, audio_seek))
     audioThread_.setDaemon(True)
     audioThread_.start()
@@ -154,7 +177,6 @@ parser.add_argument("widgets",
                     help="The audio widget names."
                     )
 args = parser.parse_args()
-
 audio_file_name_ = args.audio_file_name 
 
 # preload the audio for html playback
