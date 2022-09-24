@@ -40,16 +40,7 @@ def get_notebook_url():
 
 
 def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
- """
-    Render reactive audio widget visualizations for an audio file 
-
-    Args:
-        audio_fname (str or ndarray): the audio to be rendered (the
-        format needs to be supported by PySoundfile if it is a
-        filename) widgets: a list of strings with widget identifiers
-        playback_mode (str): pyaudio or html notebook_url (str)
-
- """
+ 
     audio_fname = audio_input
     if type(audio_input) is tuple:     # audio data input 
         audio, samplerate = audio_input
