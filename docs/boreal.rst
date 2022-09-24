@@ -1,6 +1,14 @@
 boreal package
 ==============
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   boreal.audio_widgets
+
 Submodules
 ----------
 
