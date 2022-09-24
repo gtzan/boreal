@@ -12,7 +12,6 @@ import audio
 class WaveformEnvelope:
 
     def __init__(self, fname, time_range=46):
-        print('Waveform Envelop INIT') 
         plotargs = dict(tools="", toolbar_location=None, outline_line_color='#595959')
 
         self.fname = fname
@@ -256,69 +255,3 @@ class Centroid:
         return self.centroid_plot
 
 
-class PitchHistogram:
-    def __init__(self):
-        self.histo_source = ColumnDataSource(data=dict(histo=[],
-                                                       left=[],
-                                                       right=[]))
-        self.shisto_source = ColumnDataSource(data=dict(sx=[], sy=[]))
-        plotargs = dict(tools="", toolbar_location=None,
-                        outline_line_color='#595959')
-        self.histo_plot = figure(plot_width=800, plot_height=200,
-                                 title="Histogram", x_range=[40, 80],
-                                 y_range=[0, 1.2], **plotargs)
-        self.histo_plot.background_fill_color = "#eaeaea"
-        self.histo_plot.quad(top="histo", bottom=0, left="left",
-                             right="right", fill_color="cyan",
-                             line_color="#033649", line_alpha=0.6,
-                             source=self.histo_source)
-
-        self.histo_plot.line(x="sx", y="sy", line_color='blue',
-                             line_width=2, source=self.shisto_source)
-
-        self.note_source = ColumnDataSource({
-            'x_mult': [[], []],
-            'y_mult': [[], []],
-        })
-
-        self.text_source = ColumnDataSource(data=dict(x=[50.0], y=[0.5],
-                                                      names=['']))
-
-        self.note_labels = LabelSet(x='x', y='y', text='names', level='glyph',
-                                    x_offset=1.0, source=self.text_source)
-        self.histo_plot.add_layout(self.note_labels)
-        self.histo_plot.multi_line('x_mult', 'y_mult', line_color='red',
-                                   line_width=2, source=self.note_source)
-
-    def update(self, data):
-        histo, edges, sx, sy = data['histo']
-        notes = data['notes']
-        time = data['time']
-        # pitch histogram 
-        self.histo_source.data = dict(histo=histo,
-                                      left=edges[:-1], right=edges[1:])
-        self.shisto_source.data = dict(sx=sx, sy=sy)
-
-        # grid of red lines for autotuning scale 
-        xnotes = []
-        ynotes = []
-        for n in notes:
-            xnotes.append([n, n])
-            xnotes.append([n - 12, n - 12])
-            xnotes.append([n - 24, n - 24])
-            xnotes.append([n - 36, n - 36])
-            ynotes.append([0.0, 1.2])
-            ynotes.append([0.0, 1.2])
-            ynotes.append([0.0, 1.2])
-            ynotes.append([0.0, 1.2])
-        note_names = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
-        self.note_labels = [note_names[np.mod(n, 12)] for n in notes]
-        self.note_source.data = dict(x_mult=xnotes, y_mult=ynotes)
-        self.text_source.data = dict(x=notes, y=[1.0] * len(notes),
-                                     names=self.note_labels)
-
-        # show time in titles
-        self.histo_plot.title.text = str(time)
-
-    def get_plot(self):
-        return self.histo_plot

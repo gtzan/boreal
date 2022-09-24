@@ -22,6 +22,11 @@ visualize_callback_active_ = False
 callback_id_ = None 
 
 def update():
+    """
+    Periodic callback for updating all visualizations
+    of all the audio widgets
+    """
+    
     # add the gain value of the slider to the data 
     audio.data['gain'] = gain.value 
 
@@ -30,9 +35,12 @@ def update():
     for k, v in audio_widgets_.items():
         v.update(audio.data)
 
-
-
 def create_audio_widgets(audio_file_name):
+    """
+    Create the audio widgets that will be used for
+    the reactive visualizations.
+    """
+    
     audio_widgets = {} 
     audio_widgets['spectrum'] = Spectrum()
     audio_widgets['time_waveform'] = Time_Waveform()
@@ -41,11 +49,21 @@ def create_audio_widgets(audio_file_name):
 
     return audio_widgets 
 
+
+
 def file_input_handler(attr, old, new):
+    """
+    Handler that gets called when the user chooses a file
+    Args:
+        attr: 
+        old: the old value of the file
+        new: the new value of the file 
+    """ 
+    
     print('File input handler')
     print(file_input.filename)
-    global audio_file_name 
-    audio_file_name  = file_input.filename
+    global audio_file_name_ 
+    audio_file_name_  = file_input.filename
     
     
 def play_handler():
@@ -59,7 +77,7 @@ def play_handler():
     audio_close.clear()
     audio_playing_ = True 
     if not audio_thread_started_:
-        start_audio_thread(audio_file_name)
+        start_audio_thread(audio_file_name_)
         audio_thread_started_ = True
 
     if args.playback_mode == "html":
@@ -106,15 +124,16 @@ def waveform_click_detected(event):
     
   
 
-def start_audio_thread(audio_file_name):
+def start_audio_thread(audio_file_name_):
     audio_thread_started_ = True
     global audioThread_ 
     audioThread_ = Thread(target=audio.update_audio_data,
-                          args=(audio_file_name,
+                          args=(audio_file_name_,
                      args.playback_mode, audio_play, audio_close, audio_seek))
     audioThread_.setDaemon(True)
     audioThread_.start()
-   
+
+
 
 audio_playing_ = False
 parser = argparse.ArgumentParser()
@@ -136,16 +155,16 @@ parser.add_argument("widgets",
                     )
 args = parser.parse_args()
 
-audio_file_name = args.audio_file_name 
+audio_file_name_ = args.audio_file_name 
 
 # preload the audio for html playback
 if args.playback_mode == "html":
-    s = '<audio id="myaudio" src="' + audio_file_name + '" preload="auto"></audio>'
+    s = '<audio id="myaudio" src="' + audio_file_name_ + '" preload="auto"></audio>'
     ipd.display(ipd.HTML(s))
 
 
 # create visualizers 
-audio_widgets_ = create_audio_widgets(audio_file_name)
+audio_widgets_ = create_audio_widgets(audio_file_name_)
 
 # start audio thread - audio_play event controls play/pause
 audio_play = Event()
@@ -174,8 +193,8 @@ close_button.on_click(close_handler)
 control_grid.append(playback_control)
 
 
-file_input = FileInput(accept=".wav")
-file_input.on_change('filename', file_input_handler)
+file_input_ = FileInput(accept=".wav")
+file_input_.on_change('filename', file_input_handler)
 
 
 # setup the document
@@ -190,7 +209,7 @@ plots[0].on_event(Tap, waveform_click_detected)
 
 plot_column = column(plots)
 curdoc().add_root(plot_column)
-curdoc().add_root(file_input) 
+curdoc().add_root(file_input_) 
 
         
    
