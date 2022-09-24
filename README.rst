@@ -49,9 +49,11 @@ To build boreal from source try::
   python setup.py build
 
 Then to install::
+  
   python setup.py install
 
 If all went well, you should be able to run the following command in Python::
+  
   import boreal 
 
 
