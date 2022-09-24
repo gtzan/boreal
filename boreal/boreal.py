@@ -9,14 +9,12 @@ from bokeh.application.handlers import DirectoryHandler
 from bokeh.io import show, output_notebook
 from notebook import notebookapp
 from requests.compat import urljoin
-import sys
-import numpy
 import tempfile
 
 
 def get_notebook_url():
     
-    """Tries to find out what the notebook url is 
+    """Tries to find out what the notebook url is
     
     Returns:
         a string with the notebook url 
@@ -41,20 +39,17 @@ def get_notebook_url():
     return notebook_url[:-1]
 
 
-
-
-
-
-
 def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
-    """ Render reactive audio widget visualizations for an audio file 
+ """
+    Render reactive audio widget visualizations for an audio file 
 
     Args:
-        audio_fname (str or ndarray): the audio to be rendered (the format needs to be supported by PySoundfile if it is a filename)
-        widgets: a list of strings with widget identifiers 
-        playback_mode (str): pyaudio or html
-        notebook_url (str)
-    """
+        audio_fname (str or ndarray): the audio to be rendered (the
+        format needs to be supported by PySoundfile if it is a
+        filename) widgets: a list of strings with widget identifiers
+        playback_mode (str): pyaudio or html notebook_url (str)
+
+ """
     audio_fname = audio_input
     if type(audio_input) is tuple:     # audio data input 
         audio, samplerate = audio_input

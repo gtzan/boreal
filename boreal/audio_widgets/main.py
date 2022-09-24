@@ -71,7 +71,6 @@ def play_handler():
     Gets called when the play button is pressed
     and starts the audio playback
     """
-
     
     global callback_id_
     global audio_playing_
@@ -79,7 +78,7 @@ def play_handler():
     global visualize_callback_active_
     
     audio_close.clear()
-    audio_playing_ = True 
+    audio_playing_ = True
     if not audio_thread_started_:
         start_audio_thread(audio_file_name_)
         audio_thread_started_ = True
@@ -89,35 +88,36 @@ def play_handler():
         ipd.display(ipd.Javascript(s1))
     audio_play.set()
 
-    if (visualize_callback_active_ == False): 
+    if (visualize_callback_active_ is False):
         callback_id_ = curdoc().add_periodic_callback(update, 60)
-    visualize_callback_active_ = True 
-    
+    visualize_callback_active_ = True
+
 
 def pause_handler():
     """
-    Pause the audio playback 
+    Pause the audio playback
     """
     global audio_playing_
-    audio_playing_ = False 
+    audio_playing_ = False
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').pause();"
         ipd.display(ipd.Javascript(s1))
     audio_play.clear()
 
+
 def close_handler():
     """
     Stop the audio thread and the visualization callback
     """
+
     curdoc().remove_periodic_callback(callback_id_)
-    
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').pause();"
         ipd.display(ipd.Javascript(s1))
     audio_play.clear()
     audio_close.set()
     global audioThread_
-    if audioThread_: 
+    if audioThread_:
         audioThread_.join
     global audio_thread_started_
     audio_thread_started_ = False
@@ -126,36 +126,38 @@ def close_handler():
 
 def waveform_click_detected(event):
     """
-    Seek a particular audio location based on event 
+    Seek a particular audio location based on event
 
     Args:
     event: contains the x,y coordinates of the mouse click in data
     coordinates
-    
     """
+
     if args.playback_mode == "html":
-        s1 = "document.getElementById('myaudio').currentTime = " + str(event.x) + ";"
+        s1 = "document.getElementById('myaudio').currentTime = "
+        + str(event.x) + ";"
         ipd.display(ipd.Javascript(s1))
-    
     audio.set_current_time(event.x)
-    audio_seek.set()        
-    
-  
+    audio_seek.set()
+
 
 def start_audio_thread(audio_file_name):
     """
     Start the audio thread
     Args:
-    audio_file_name (str): the audio file from which to read the samples 
+    audio_file_name (str): the audio file from which to read the samples
     """
+    global audio_thread_started_
     audio_thread_started_ = True
-    global audioThread_ 
+    global audioThread_
     audioThread_ = Thread(target=audio.update_audio_data,
                           args=(audio_file_name,
-                     args.playback_mode, audio_play, audio_close, audio_seek))
+                                args.playback_mode,
+                                audio_play,
+                                audio_close,
+                                audio_seek))
     audioThread_.setDaemon(True)
     audioThread_.start()
-
 
 
 audio_playing_ = False
@@ -173,19 +175,23 @@ parser.add_argument("playback_mode",
 parser.add_argument("widgets",
                     nargs='+',
                     default=[],
-                    choices=['time_waveform', 'spectrum', 'circulareq', 'waveform_envelope'],
+                    choices=['time_waveform',
+                             'spectrum',
+                             'circulareq',
+                             'waveform_envelope'],
                     help="The audio widget names."
                     )
 args = parser.parse_args()
-audio_file_name_ = args.audio_file_name 
+audio_file_name_ = args.audio_file_name
 
 # preload the audio for html playback
 if args.playback_mode == "html":
-    s = '<audio id="myaudio" src="' + audio_file_name_ + '" preload="auto"></audio>'
+    s = '<audio id="myaudio" src="'
+    + audio_file_name_ + '" preload="auto"></audio>'
     ipd.display(ipd.HTML(s))
 
 
-# create visualizers 
+# create visualizers
 audio_widgets_ = create_audio_widgets(audio_file_name_)
 
 # start audio thread - audio_play event controls play/pause
@@ -196,7 +202,7 @@ audio_seek = Event()
 
 control_grid = []
 # setup some sliders for controlling the widgets
-max_freq = 22050 
+max_freq = 22050
 freq = Slider(start=1, end=max_freq, value=max_freq, step=1, title="Frequency")
 gain = Slider(start=1, end=20, value=1, step=1, title="Gain")
 
@@ -231,11 +237,4 @@ plots[0].on_event(Tap, waveform_click_detected)
 
 plot_column = column(plots)
 curdoc().add_root(plot_column)
-curdoc().add_root(file_input_) 
-
-        
-   
-
-
-
-
+curdoc().add_root(file_input_)

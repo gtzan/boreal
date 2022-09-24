@@ -39,11 +39,32 @@ information from the underlying audio signal. Playback controls can be
 used to play, pause, and seek the underlying audio and associated
 visuals.
 
+Installation
+------------
+
+**Building from source**
+
+To build boreal from source try::
+
+  python setup.py build
+
+Then to install::
+  python setup.py install
+
+If all went well, you should be able to run the following command in Python::
+  import boreal 
+
+
+
 Get started
 -----------
 To see how Boreal works try the following notebook (also part of the package):
 
 https://github.com/gtzan/boreal/blob/main/boreal/audio_widgets_notebook.ipynb
+
+
+
+
 
 Features
 --------
