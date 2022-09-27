@@ -5,6 +5,7 @@ import ipykernel
 import requests
 import soundfile as sf
 from bokeh.application import Application
+from bokeh.resources import INLINE
 from bokeh.application.handlers import DirectoryHandler
 from bokeh.io import show, output_notebook
 from notebook import notebookapp
@@ -63,7 +64,7 @@ def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
     if notebook_url is None:
         notebook_url = get_notebook_url()
         print(notebook_url)
-    output_notebook()
+    output_notebook(resources=INLINE)
     show(app, notebook_url=notebook_url)
 
 
@@ -92,3 +93,10 @@ def circulareq(audio_input, playback_mode = 'pyaudio', notebook_url=None):
     """
     
     render(audio_input, ['circulareq'], playback_mode, notebook_url)
+
+
+def centroid(audio_input, playback_mode = 'pyaudio', notebook_url=None):
+    """ Spectrum audio widget
+    """
+    render(audio_input, ['centroid'], playback_mode, notebook_url)
+    

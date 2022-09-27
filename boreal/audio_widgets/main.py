@@ -1,7 +1,7 @@
 import argparse
 from os.path import dirname, join
 from threading import Thread, Event
-
+import sys
 
 from bokeh.io import curdoc
 from bokeh.layouts import row, column, widgetbox, gridplot
@@ -9,7 +9,8 @@ from bokeh.models import ColumnDataSource, Slider, Div, Button, FileInput
 from bokeh.events import Tap 
 
 from audio_widgets import Time_Waveform, Spectrum, CircularEq, WaveformEnvelope
-import sys
+from audio_widgets import WaveformEnvelope, Centroid
+
 
 import audio
 import IPython.display as ipd
@@ -28,7 +29,7 @@ def update():
     """
     
     # add the gain value of the slider to the data 
-    audio.data['gain'] = gain.value 
+    #audio.data['gain'] = gain.value 
 
     # update the visualizers with the features extracted from
     # the audio analysis and playback thread
@@ -44,9 +45,9 @@ def create_audio_widgets(audio_file_name):
     audio_widgets = {} 
     audio_widgets['spectrum'] = Spectrum()
     audio_widgets['time_waveform'] = Time_Waveform()
-    audio_widgets['waveform_envelope'] = WaveformEnvelope(audio_file_name)
+    audio_widgets['waveform_envelope'] = WaveformEnvelope(audio_file_name, waveform_click_detected)
     audio_widgets['circulareq'] = CircularEq()
-
+    audio_widgets['centroid'] = Centroid() 
     return audio_widgets 
 
 
@@ -178,7 +179,8 @@ parser.add_argument("widgets",
                     choices=['time_waveform',
                              'spectrum',
                              'circulareq',
-                             'waveform_envelope'],
+                             'waveform_envelope',
+                             'centroid'],
                     help="The audio widget names."
                     )
 args = parser.parse_args()
@@ -203,11 +205,11 @@ audio_seek = Event()
 control_grid = []
 # setup some sliders for controlling the widgets
 max_freq = 22050
-freq = Slider(start=1, end=max_freq, value=max_freq, step=1, title="Frequency")
-gain = Slider(start=1, end=20, value=1, step=1, title="Gain")
+#freq = Slider(start=1, end=max_freq, value=max_freq, step=1, title="Frequency")
+#gain = Slider(start=1, end=20, value=1, step=1, title="Gain")
 
-sound_control = [gain, freq]
-control_grid.append(sound_control)
+#sound_control = [gain, freq]
+#control_grid.append(sound_control)
 
 # setup playback widgets
 play_button = Button(label="Play", button_type="success")
@@ -233,7 +235,8 @@ curdoc().add_root(gridplot(control_grid))
 
 # make a column of desired widgets
 plots = [audio_widgets_[x].get_plot() for x in args.widgets]
-plots[0].on_event(Tap, waveform_click_detected)
+#for p in plots: 
+#    p.on_event(Tap, waveform_click_detected)
 
 plot_column = column(plots)
 curdoc().add_root(plot_column)

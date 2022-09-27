@@ -5,7 +5,7 @@ import numpy as np
 from scipy import fft 
 import soundfile as sf
 from scipy.integrate import simps
-from audio_processors import Spectrum, SpectrumBins 
+from audio_processors import Spectrum, SpectrumBins, SpectralCentroid
 
 # These are the values extracted on every block
 # of audio that is being processed 
@@ -64,12 +64,14 @@ def update_audio_data(fname, playback_mode, audio_play,
         data['signal'] = signal
         data['spectrum'] = np.zeros(blockSize)
         data['bins'] = np.zeros(circBins) 
-        
+        data['centroid_track'] = np.zeros(len_blocks)
+        data['scentroid_track'] = np.zeros(len_blocks)        
         
         # initialize processors 
         spectrum_processor = Spectrum(blockSize)
         spectrum_bins_processor = SpectrumBins(circBins)
-
+        centroid_processor = SpectralCentroid(len_blocks)
+        
         # initialize pyaudio 
         try:
             import pyaudio
@@ -126,7 +128,8 @@ def update_audio_data(fname, playback_mode, audio_play,
             # new information to the data dictionary 
             spectrum_processor.process(data)
             spectrum_bins_processor.process(data)
-
+            centroid_processor.process(data)
+            
             # advance time
             current_time += block_duration
             t1 = time.perf_counter()

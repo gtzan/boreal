@@ -11,14 +11,14 @@ import audio
 
 class WaveformEnvelope:
 
-    def __init__(self, fname, time_range=46):
+    def __init__(self, fname, tap_function):
         plotargs = dict(tools="", toolbar_location=None, outline_line_color='#595959')
 
         self.fname = fname
-
+        self.tap_function = tap_function 
         time = [0.0, 1.0] 
         self.signal_plot = figure(plot_width=1000, plot_height=350,
-                                  title="Signal",
+                                  title="Waveform Envelope",
                                   x_range=[0, time[-1] + 30],
                                   y_range=[-1.25, 1.25],
                                   x_axis_label='Time(secs)',
@@ -48,27 +48,34 @@ class WaveformEnvelope:
                               top=max_envelope,
                               width=1.0 / len(time),
                               fill_color='gray',
-                              fill_alpha=1.0)
+                              fill_alpha=0.5)
 
         self.duration = len(audio) / srate
         self.length = len(max_envelope)        
 
-        time = 0.0
         t = np.linspace(0, self.duration, self.length)
         y = np.zeros(len(t))
 
-        self.signal_plot.line(x="t", y="y", line_color="green",
-                              source=self.signal_source_pos, line_width=3.0)
-        self.signal_plot.line(x="t", y="y", line_color="green",
-                              source=self.signal_source_neg, line_width=3.0)
+        #self.signal_plot.line(x="t", y="y", line_color="green",
+        #                      source=self.signal_source_pos, line_width=1.0)
+        #self.signal_plot.line(x="t", y="y", line_color="green",
+        #                      source=self.signal_source_neg, line_width=1.0)
+        self.signal_plot.on_event(Tap, self.tap_detected)
+        y[0] = 1.25
+        
+        self.signal_plot.vbar(x="t", top="y", width = 20.0 / len(time) ,
+                              color = 'red', fill_color = 'red',fill_alpha=1.0, 
+                              source=self.signal_source_pos)
 
-        # self.signal_plot.line(time, max_envelope, color='black', line_width=0.5, line_alpha=0.5)
-        # self.signal_plot.line(time, -max_envelope, color='black', line_width=0.5, line_alpha=0.5)
 
-        # self.signal_plot.on_event(Tap, tap_detected)
+        self.signal_plot.vbar(x="t", top="y", width = 20.0 / len(time),
+                              color = 'red', fill_color = 'red', fill_alpha=1.0, 
+                              source=self.signal_source_neg)
         
 
-
+    def tap_detected(self, event):
+        self.tap_function(event) 
+        
 
     def max_absolute(self, block):
         return np.max(np.abs(block))
@@ -84,20 +91,23 @@ class WaveformEnvelope:
 
     def update(self, data):
         time = data['time']
-
+        
         t = np.linspace(0, self.duration, self.length)
         y = np.zeros(len(t))
         if time is None:
             pass
         else:
             position = (time / self.duration) * self.length
-            y[int(position)] = 1.5
-            self.signal_plot.title.text = "Waveform Envelope\t" + self.fname
+            y[int(position)] = 1.25
+            self.signal_plot.title.text = "Waveform Envelope - " + self.fname  + '\t' + str(time)
 
             self.signal_source_pos.data = dict(t=t, y=y)
             self.signal_source_neg.data = dict(t=t, y=-y)
 
- 
+
+
+
+            
             
     def get_plot(self):
         return self.signal_plot
@@ -128,7 +138,7 @@ class Time_Waveform:
             pass 
         else:
             t = np.linspace(0, 100, len(signal))            
-            self.signal_source.data = dict(t=t, y=signal * gain)
+            self.signal_source.data = dict(t=t, y=signal)
             self.signal_plot.title.text = "Time Domain Waveform\t" + str(time)
 
     def get_plot(self):
