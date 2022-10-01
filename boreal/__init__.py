@@ -2,6 +2,6 @@
 
 __author__ = """George Tzanetakis"""
 __email__ = 'gtzan@cs.uvic.ca'
-__version__ = '0.1.0'
+__version__ = '0.3.0'
 
 
