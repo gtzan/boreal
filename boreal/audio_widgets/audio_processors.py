@@ -3,9 +3,9 @@ from scipy import fft
 from scipy.integrate import simps
 
 
-class Spectrum:
+class SpectrumAudio:
 
-    name = 'Spectrum' 
+    name = 'SpectrumAudio' 
     def __init__(self, blockSize):
         """
         Process audio input and return the corresponding power spectrum 

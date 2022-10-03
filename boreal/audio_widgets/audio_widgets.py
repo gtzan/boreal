@@ -6,7 +6,7 @@ import soundfile as sf
 from bokeh.models import ColumnDataSource, LabelSet
 from bokeh.plotting import figure
 from bokeh.events import Tap
-import audio
+from .audio import *
 
 
 class WaveformEnvelope:

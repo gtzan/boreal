@@ -8,11 +8,11 @@ from bokeh.layouts import row, column, widgetbox, gridplot
 from bokeh.models import ColumnDataSource, Slider, Div, Button, FileInput 
 from bokeh.events import Tap 
 
-from audio_widgets import Time_Waveform, Spectrum, CircularEq, WaveformEnvelope
-from audio_widgets import WaveformEnvelope, Centroid
+from .audio_widgets import Time_Waveform, Spectrum, CircularEq, WaveformEnvelope
+from .audio_widgets import WaveformEnvelope, Centroid
 
 
-import audio
+from . import audio 
 import IPython.display as ipd
 import time
 
@@ -149,7 +149,7 @@ def start_audio_thread(audio_file_name):
     audio_file_name (str): the audio file from which to read the samples
     """
     global audio_thread_started_
-    audio_thread_started_ = True
+    audio_thread_started_ = True 
     global audioThread_
     audioThread_ = Thread(target=audio.update_audio_data,
                           args=(audio_file_name,

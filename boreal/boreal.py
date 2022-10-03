@@ -11,7 +11,7 @@ from bokeh.io import show, output_notebook
 from notebook import notebookapp
 from requests.compat import urljoin
 import tempfile
-
+from pkg_resources import resource_filename 
 
 def get_notebook_url():
     
@@ -55,9 +55,13 @@ def render(audio_input, widgets=[], playback_mode="pyaudio", notebook_url=None):
     # set up the command line arguments passed to the application 
     argv = [audio_fname]
     argv = argv + [playback_mode] + widgets
+
+
+    path_to_widgets = resource_filename(__name__, 'audio_widgets')
+    print('path_to_widgets', path_to_widgets)
     
     # create a Bokeh application from the audio_widgets directory
-    handler = DirectoryHandler(filename='audio_widgets', argv=argv)
+    handler = DirectoryHandler(filename=path_to_widgets, argv=argv)
     app = Application(handler)
 
     # show the application in the notebook 
