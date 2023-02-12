@@ -4,6 +4,8 @@ from math import ceil
 import numpy as np
 import soundfile as sf
 from bokeh.models import ColumnDataSource, LabelSet
+from bokeh.models import Span,Band
+
 from bokeh.plotting import figure
 from bokeh.events import Tap
 from .audio import *
@@ -16,61 +18,53 @@ class WaveformEnvelope:
 
         self.fname = fname
         self.tap_function = tap_function 
-        time = [0.0, 1.0] 
-        self.signal_plot = figure(plot_width=1000, plot_height=350,
-                                  title="Waveform Envelope",
-                                  x_range=[0, time[-1] + 30],
-                                  y_range=[-1.25, 1.25],
-                                  x_axis_label='Time(secs)',
-                                  y_axis_label='Amplitude', **plotargs)
-        self.signal_plot.background_fill_color = "#eaeaea"
 
-
-        
         try:        
             audio, srate = sf.read(fname, always_2d=True)
         except RuntimeError:
             print('Problem opening ', fname)
             return
-
+        
         # convert to mono 
         audio =  audio.sum(axis=1) / 2
+        
+        duration_secs = audio.shape[0] / srate
+        self.signal_plot = figure(plot_width=600, plot_height=350,
+                                  title="Waveform Envelope",
+                                  x_range=[0, duration_secs],
+                                  y_range=[-1.0, 1.0],
+                                  x_axis_label='Time(secs)',
+                                  y_axis_label='Amplitude', **plotargs)
+        self.signal_plot.background_fill_color = "#eaeaea"
+
+
 
         max_envelope = self.process(audio, 4096, block_process=self.max_absolute)
-        time = np.linspace(0, len(audio) / srate, num=len(max_envelope))    
-
-
-
-        self.signal_source_pos = ColumnDataSource(data=dict(t=[], y=[]))
-        self.signal_source_neg = ColumnDataSource(data=dict(t=[], y=[]))
-
-        self.signal_plot.vbar(x=time, bottom=-max_envelope,
-                              top=max_envelope,
-                              width=1.0 / len(time),
-                              fill_color='gray',
-                              fill_alpha=0.5)
-
         self.duration = len(audio) / srate
-        self.length = len(max_envelope)        
+        self.length = len(max_envelope) 
+        time = np.linspace(0, len(audio) / srate, num=self.length)  
 
-        t = np.linspace(0, self.duration, self.length)
-        y = np.zeros(len(t))
+        #self.signal_source_pos = ColumnDataSource(data=dict(t=time, y=max_envelope))
+        #self.signal_source_neg = ColumnDataSource(data=dict(t=time, y=-max_envelope))
 
-        #self.signal_plot.line(x="t", y="y", line_color="green",
-        #                      source=self.signal_source_pos, line_width=1.0)
-        #self.signal_plot.line(x="t", y="y", line_color="green",
-        #                      source=self.signal_source_neg, line_width=1.0)
-        self.signal_plot.on_event(Tap, self.tap_detected)
-        y[0] = 1.25
+        band_data = {}
+        band_data['x'] = time
+        band_data['lower'] = max_envelope
+        band_data['upper'] = -max_envelope
+        band_source = ColumnDataSource(data=band_data)
         
-        self.signal_plot.vbar(x="t", top="y", width = 20.0 / len(time) ,
-                              color = 'red', fill_color = 'red',fill_alpha=1.0, 
-                              source=self.signal_source_pos)
+        band = Band(base='x', lower='lower', upper='upper', source = band_source, level='underlay', fill_alpha=1.0, line_width=1, line_color='black')
+        self.signal_plot.add_layout(band)
+    
+        pos = 0.0 
+        self.mpos_source = ColumnDataSource(data=dict(
+            xs=[[pos,pos,pos]],
+            ys=[[0.0, 1.0, -1.0]]
+        ))
+        self.signal_plot.multi_line(xs="xs", ys="ys", source=self.mpos_source, 
+             line_color="red", line_width=1)
+        self.signal_plot.on_event(Tap, self.tap_detected)
 
-
-        self.signal_plot.vbar(x="t", top="y", width = 20.0 / len(time),
-                              color = 'red', fill_color = 'red', fill_alpha=1.0, 
-                              source=self.signal_source_neg)
         
 
     def tap_detected(self, event):
@@ -91,19 +85,12 @@ class WaveformEnvelope:
 
     def update(self, data):
         time = data['time']
-        
-        t = np.linspace(0, self.duration, self.length)
-        y = np.zeros(len(t))
         if time is None:
             pass
         else:
-            position = (time / self.duration) * self.length
-            y[int(position)] = 1.25
             self.signal_plot.title.text = "Waveform Envelope - " + self.fname  + '\t' + str(time)
-
-            self.signal_source_pos.data = dict(t=t, y=y)
-            self.signal_source_neg.data = dict(t=t, y=-y)
-
+            self.mpos_source.data = dict(xs = [[time,time,time]], ys=[[0.0, 1.0, -1.0]])
+            
 
 
 

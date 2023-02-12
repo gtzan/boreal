@@ -80,6 +80,8 @@ def play_handler():
     
     audio_close.clear()
     audio_playing_ = True
+
+    
     if not audio_thread_started_:
         start_audio_thread(audio_file_name_)
         audio_thread_started_ = True
@@ -87,8 +89,9 @@ def play_handler():
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').play();"
         ipd.display(ipd.Javascript(s1))
-    audio_play.set()
+    audio_play.set()    
 
+    
     if (visualize_callback_active_ is False):
         callback_id_ = curdoc().add_periodic_callback(update, 60)
     visualize_callback_active_ = True
@@ -110,19 +113,23 @@ def close_handler():
     """
     Stop the audio thread and the visualization callback
     """
-
-    curdoc().remove_periodic_callback(callback_id_)
+    global visualize_callback_active_
+    if (visualize_callback_active_ == True): 
+        curdoc().remove_periodic_callback(callback_id_)
+        visualize_callback_active_ = False
+    
     if args.playback_mode == "html":
         s1 = "document.getElementById('myaudio').pause();"
         ipd.display(ipd.Javascript(s1))
     audio_play.clear()
     audio_close.set()
-    global audioThread_
-    if audioThread_:
-        audioThread_.join
-    global audio_thread_started_
-    audio_thread_started_ = False
-    audio_play.set()
+    #global audioThread_
+    #if audioThread_:
+    #    print('KILLING AUDIO THREAD') 
+    #    audioThread_.join
+    #    print('AUDIO THREAD KILLED') 
+    #global audio_thread_started_
+    #audio_thread_started_ = False
 
 
 def waveform_click_detected(event):
@@ -159,6 +166,7 @@ def start_audio_thread(audio_file_name):
                                 audio_seek))
     audioThread_.setDaemon(True)
     audioThread_.start()
+
 
 
 audio_playing_ = False

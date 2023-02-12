@@ -49,6 +49,7 @@ def update_audio_data(fname, playback_mode, audio_play,
 
         # open sound file and get info about it 
         isf = sf.SoundFile(fname, 'r')
+        isf.seek(0)
         audio_info['duration'] = sf.info(fname).duration
         audio_info['samplerate'] = sf.info(fname).samplerate
         audio_info['blockSize'] = blockSize
@@ -74,9 +75,12 @@ def update_audio_data(fname, playback_mode, audio_play,
         
         # initialize pyaudio 
         try:
+            
             import pyaudio
             # setup audio playback stream 
             pa = pyaudio.PyAudio()
+
+            
             stream = pa.open(
                 format=pyaudio.paFloat32,
                 channels=1,
@@ -88,6 +92,8 @@ def update_audio_data(fname, playback_mode, audio_play,
             pyaudio_available = True
         except:
             pyaudio_available = False
+
+    
 
     while True:
         current_time = data['time']
@@ -125,7 +131,9 @@ def update_audio_data(fname, playback_mode, audio_play,
             # needs to come after the spectrum processor
             # as it requires the spectrum to be present
             # in data. Essentially each processor adds
-            # new information to the data dictionary 
+            # new information to the data dictionary
+
+
             spectrum_processor.process(data)
             spectrum_bins_processor.process(data)
             centroid_processor.process(data)
@@ -133,7 +141,6 @@ def update_audio_data(fname, playback_mode, audio_play,
             # advance time
             current_time += block_duration
             t1 = time.perf_counter()
-
             data['time'] = current_time                
             data['signal'] = sfdata
 
@@ -152,16 +159,21 @@ def update_audio_data(fname, playback_mode, audio_play,
             k = k + 1
             if k >= len_blocks:
                 print("End of file")
-                set_current_time(0.0)
+                data['time'] = 0.0 
                 k = 0
+                current_time = 0.0 
                 isf.seek(0)
+                # re-initialize centroid_processor 
+                centroid_processor = SpectralCentroid(len_blocks)
+
 
             # deal with closing/terminating the audio thread 
             if audio_close.isSet():
                 print("Terminating audio analysis/playback")
                 set_current_time(0.0)
                 k = 0
-                isf.seek(0)                                
+                isf.seek(0)
+                pa.close()
                 return 
         except:
             continue
