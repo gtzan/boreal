@@ -1,4 +1,5 @@
 import json
+import os.path
 import re
 
 import ipykernel
@@ -47,7 +48,9 @@ def render(audio_input, widgets=[], playback_mode="pyaudio",
     audio_fname = audio_input
     if type(audio_input) is tuple:     # audio data input 
         audio, samplerate = audio_input
-        temp_file_name = tempfile.NamedTemporaryFile(dir='/tmp',
+        if not os.path.isdir("./tmp"):
+            os.mkdir('./tmp')
+        temp_file_name = tempfile.NamedTemporaryFile(dir='./tmp',
                                               suffix='.wav',
                                               delete=False)
         # write a temporary file for the audio data 
