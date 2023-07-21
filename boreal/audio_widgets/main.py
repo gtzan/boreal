@@ -115,7 +115,7 @@ def play_handler():
     if (visualize_callback_active_ is False):
         callback_id_ = curdoc().add_periodic_callback(update, 60)
     visualize_callback_active_ = True
-
+w
 
 def pause_handler():
     """

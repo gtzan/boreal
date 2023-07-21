@@ -75,7 +75,6 @@ def update_audio_data(fname, playback_mode, audio_play,
         
         # initialize pyaudio 
         try:
-            
             import pyaudio
             # setup audio playback stream 
             pa = pyaudio.PyAudio()

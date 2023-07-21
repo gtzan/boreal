@@ -1,0 +1,376 @@
+{
+  "annotations": [
+    {
+      "annotation_metadata": {
+        "curator": {
+          "name": "",
+          "email": ""
+        },
+        "annotator": {},
+        "version": "",
+        "corpus": "",
+        "annotation_tools": "",
+        "annotation_rules": "",
+        "validation": "",
+        "data_source": "ground_truth"
+      },
+      "namespace": "beat",
+      "data": [
+        {
+          "time": 0.753,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 1.276,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 1.804,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 2.326,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 2.843,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 3.365,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 3.888,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 4.41,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 4.933,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 5.455,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 5.978,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 6.5,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 7.017,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 7.539,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 8.062,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 8.584,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 9.101,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 9.623,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 10.146,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 10.662,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 11.185,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 11.701,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 12.224,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 12.741,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 13.257,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 13.774,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 14.29,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 14.813,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 15.33,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 15.846,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 16.363,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 16.885,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 17.408,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 17.93,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 18.447,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 18.975,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 19.492,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 20.014,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 20.537,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 21.059,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 21.582,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 22.11,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 22.632,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 23.166,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 23.689,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 24.211,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 24.734,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 25.256,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 25.779,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 26.301,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 26.823,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 27.346,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 27.868,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 28.391,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 28.913,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 29.436,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        },
+        {
+          "time": 29.958,
+          "duration": 0.0,
+          "value": null,
+          "confidence": null
+        }
+      ],
+      "sandbox": {},
+      "time": 0,
+      "duration": null
+    }
+  ],
+  "file_metadata": {
+    "title": "",
+    "artist": "",
+    "release": "",
+    "duration": 30.12154195011338,
+    "identifiers": {},
+    "jams_version": "0.3.4"
+  },
+  "sandbox": {}
+}
