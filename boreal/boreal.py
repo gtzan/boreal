@@ -7,7 +7,7 @@ from bokeh.application import Application
 from bokeh.resources import INLINE
 from bokeh.application.handlers import DirectoryHandler
 from bokeh.io import show, output_notebook
-from notebook import notebookapp
+#from notebook import notebookapp
 from requests.compat import urljoin
 import tempfile
 from pkg_resources import resource_filename
@@ -183,7 +183,7 @@ def update_audio_data(fname, plot_handle, mpos_source, audio_play, duration_secs
     print("STARTING PLAYBACK\n")
   
     while(1):
-        audio_play.wait()        
+        # audio_play.wait()        
         t0 = time.perf_counter()
         sfdata = isf.read(blockSize, always_2d=True).astype(np.float32)
         # convert to mono 
@@ -192,45 +192,45 @@ def update_audio_data(fname, plot_handle, mpos_source, audio_play, duration_secs
         ctime += block_duration
 
         t1 = time.perf_counter()
-        if block_duration > (t1 - t0):
-            sleep(block_duration - (t1 - t0))
-        else:
-            sleep(t1 - t0)
+        #if block_duration > (t1 - t0):
+        #    sleep(block_duration - (t1 - t0))
+        #else:
+        #    sleep(t1 - t0)
+        sleep(0.5)
         k = k + 1 
         if (ctime > duration_secs): 
             print("AUDIO PLAYBACK ENDED")
             return
         
         
-def update_visual_data(plot_handle, mpos_source, audio_play, duration_secs):
+def update_visual_data(bokeh_pane, mpos_source, duration_secs):
     k = 0
     ctime = 0; 
-    print("STARTING PLAYBACK VISUAL\n")
-    block_duration = 0.05 
+    block_duration = 0.1 
     while(1):
         audio_play.wait()        
         t0 = time.perf_counter()
         mpos_source.data = dict(xs = [[ctime,ctime,ctime]], ys=[[0.0, 1.0, -1.0]])
-        push_notebook(handle=plot_handle)
+        pn.io.push_notebook(bokeh_pane)
         ctime += block_duration
         t1 = time.perf_counter()
         if block_duration > (t1 - t0):
             sleep(block_duration - (t1 - t0))
         else:
             sleep(t1 - t0)
-        k = k + 1 
+        k = k + 1
         if (ctime > duration_secs): 
             print("VISUAL PLAYBACK ENDED")
             return 
-
-
 
         
         
 def time_domain_waveform(audio, srate):
     duration_secs = audio.shape[0] / srate
-    
+
+    global audio_play 
     audio_play = Event()
+    print("INIT HERE", type(audio_play))
     temp_file = tempfile.NamedTemporaryFile(dir='.',
                                             suffix='.wav',
                                             delete=False)
@@ -238,60 +238,76 @@ def time_domain_waveform(audio, srate):
     audio_fname = temp_file.name 
     
     (signal_plot, mpos_source) = init_visualization(audio, srate)
-    output_notebook()    
-    plot_handle = show(signal_plot, notebook_handle=True)
-    push_notebook(handle=plot_handle) 
-    
-    # start visualization thread 
-    visualThread = Thread(target=update_visual_data, args=[plot_handle, mpos_source, audio_play, duration_secs])
-    visualThread.setDaemon(True)
-
-    # start audio analysis thread 
-    audioThread = Thread(target=update_audio_data, args=[audio_fname, plot_handle, mpos_source, audio_play, duration_secs])
-    audioThread.setDaemon(True)
-    print("AUDIO THREAD LIVE", audioThread.is_alive())
-
-
-    def callback(audioThread, visualThread, audio_play, *events):
-        for event in events:
-            if event.name == 'value':
-                new_time = (event.new / 100.0) * 30.0
-                audio_perc = int((audio.time / 30.0) * 100.0)
-                if (abs(event.new - event.old) > 1): 
-
-                    audio.time = new_time 
-                    audio.paused = True 
-                    player.pause()
-            elif event.name == 'direction':
-                info_pane.object = 'DIRECTION' 
-                if (event.new == 1):
-                    info_pane.object = 'HERE' 
-                    audio.paused = False
-                    audio.autoplay = True
-                    if (audioThread.is_alive() == False):
-                        audioThread.start()
-                    if (visualThread.is_alive() == False):
-                        visualThread.start()
-                    audio_play.set()
-                elif (event.new ==0): 
-                    audio.paused = True
-                    audio.autoplay = True
-                    audio_play.clear()
-                    
+    bokeh_pane = pn.pane.Bokeh(signal_plot)
     pn.extension()
-    audio = pn.pane.Audio(audio_fname, name='Audio')
-    audio.autoplay = False 
-    audio.visible = False
+
+    # start visualization thread
+    print("INIT HERE before thread", type(audio_play))    
+    # visualThread = Thread(target=update_visual_data, args=[bokeh_pane, mpos_source, duration_secs])
+    # visualThread.setDaemon(True)
+    
+    # start audio analysis thread 
+    # audioThread = Thread(target=update_audio_data, args=[audio_fname, plot_handle, mpos_source, audio_play, duration_secs])
+    # audioThread.setDaemon(True)
+    # print("AUDIO THREAD LIVE", audioThread.is_alive())
+
+    # visualThread.start()
+    
+
+    def callback(audio_pane, audio_play, *events):
+        for event in events:
+            if (event.name == 'value'): 
+                info_pane.object ="value" + str(type(audio_pane))
+            elif (event.name == 'direction'):
+                info_pane.object ="direction"
+                if (event.new == 1):
+                    audio_pane.paused = False;
+                    audio_pane.autoplay = True;
+#                    audio_play.set()                    
+# if (visualThread.is_alive() == False):
+#                        visualThread.start()
+                elif (event.new == 0):  
+                    audio_pane.paused = True
+                    audio_pane.autoplay=True
+                    audio_play.clear()
+
+
+                    
+                    
+#                 if event.name == 'value':
+#                new_time = (event.new / 100.0) * 30.0
+#                audio_perc = int((audio.time / 30.0) * 100.0)
+#                if (abs(event.new - event.old) > 2): 
+#                    audio.time = new_time 
+#                    audio.paused = True 
+#                    player.pause()
+#            elif event.name == 'direction':
+#                info_pane.object = 'DIRECTION' 
+#                if (event.new == 1):
+#                    audio.paused = False
+#                    audio.autoplay = True
+#                    # if (audioThread.is_alive() == False):
+#                    #    audioThread.start()
+
+#                    audio_play.set()
+#                elif (event.new ==0): 
+#                    audio.paused = True
+#                    audio.autoplay = True
+#                    audio_play.clear()
+#                    
+    pn.extension()
+    audio_pane = pn.pane.Audio(audio_fname, name='Audio')
+    audio_pane.autoplay = False 
+    audio_pane.visible = True
     player = pn.widgets.Player(name='Player', start=0, end=100, value=0, loop_policy='once', interval=1000)
     info_pane = pn.pane.Markdown(object='INIT')
     player.interval = int(30.0 * 1000.0 / 100.0)
     
-    
-    watcher = player.param.watch(partial(callback,audioThread,visualThread,audio_play), ['value','direction'], onlychanged=True)
-    # display(info_pane)
+    watcher = player.param.watch(partial(callback,audio_pane,audio_play), ['value','direction'], onlychanged=True)
+    display(bokeh_pane)
     display(info_pane)
     display(player)
-    display(audio)
+    display(audio_pane)
     
     # start html audio playback 
     #s = '<audio id="myaudio" src="' + os.path.basename(audio_fname) + '" preload="auto"></audio>'
